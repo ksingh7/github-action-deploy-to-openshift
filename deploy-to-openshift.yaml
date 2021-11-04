@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gha-python-app
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: gha-python-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gha-python-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gha-python-app
+  template:
+    metadata:
+      labels:
+        app: gha-python-app
+    spec:
+      containers:
+        - name: gha-python-app
+          image: <IMAGE>
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "300m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8080
