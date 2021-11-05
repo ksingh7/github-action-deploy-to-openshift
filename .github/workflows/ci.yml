@@ -4,8 +4,9 @@ jobs:
     name: Build, push, and deploy
     runs-on: ubuntu-latest
     env:
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      #DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      #DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      QUAY_REGISTRY_SECRET: ${{ secrets.QUAY_REGISTRY_SECRET }}
       OPENSHIFT_SERVER_URL: ${{ secrets.OPENSHIFT_SERVER_URL }}
       OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
       REGISTRY_URL: "quay.io" # use "docker.io" for docker hub
@@ -29,7 +30,9 @@ jobs:
         run: docker push ${{ env.REGISTRY_URL }}/karansingh/gha-python-app:$(echo $GITHUB_SHA | head -c7)
 
       - name: Update deployment file
-        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|${{ env.REGISTRY_URL }}/karansingh/gha-python-app:'${TAG}'|' $GITHUB_WORKSPACE/deploy-to-openshift.yaml
+        run:  |
+          TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|${{ env.REGISTRY_URL }}/karansingh/gha-python-app:'${TAG}'|' $GITHUB_WORKSPACE/deploy-to-openshift.yaml
+          sed -i 's|<REGISTRY_SECRET>|${{ env.QUAY_REGISTRY_SECRET }}' $GITHUB_WORKSPACE/deploy-to-openshift.yaml
 
       - name: Authenticate and set context
         uses: redhat-actions/oc-login@v1

@@ -1,4 +1,12 @@
 apiVersion: v1
+kind: Secret
+metadata:
+  name: image-registry-secret
+data:
+  .dockerconfigjson: <REGISTRY_SECRET>
+type: kubernetes.io/dockerconfigjson
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: gha-python-app
@@ -25,7 +33,7 @@ spec:
         app: gha-python-app
     spec:
       imagePullSecrets:
-      - name: image-registry-secret    
+      - name: image-registry-secret
       containers:
         - name: gha-python-app
           image: <IMAGE>
