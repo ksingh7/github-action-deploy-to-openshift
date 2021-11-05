@@ -6,7 +6,7 @@ jobs:
     env:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      QUAY_REGISTRY_SECRET: ${{ secrets.QUAY_REGISTRY_SECRET }}
+      QUAY_PULL_SECRET: ${{ secrets.QUAY_PULL_SECRET }}
       OPENSHIFT_SERVER_URL: ${{ secrets.OPENSHIFT_SERVER_URL }}
       OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
       REGISTRY_URL: "quay.io" # use "docker.io" for docker hub
@@ -33,16 +33,13 @@ jobs:
         run:  TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|${{ env.REGISTRY_URL }}/karansingh/gha-python-app:'${TAG}'|' $GITHUB_WORKSPACE/deploy-to-openshift.yaml
 
       - name: Update deployment file with image registry secret
-        run: sed -i 's|<REGISTRY_SECRET>|${{ env.QUAY_REGISTRY_SECRET }}|' $GITHUB_WORKSPACE/deploy-to-openshift.yaml
+        run: sed -i 's|<REGISTRY_SECRET>|${{ env.QUAY_PULL_SECRET }}|' $GITHUB_WORKSPACE/deploy-to-openshift.yaml
 
       - name: Authenticate and set context
         uses: redhat-actions/oc-login@v1
         with:
           openshift_server_url: ${{ env.OPENSHIFT_SERVER_URL }}
           openshift_token: ${{ env.OPENSHIFT_TOKEN }}
-
-#      - name: Create image registry secret
-#        run: oc create secret docker-registry image-registry-secret --docker-server=quay.io --docker-username=${{ env.DOCKER_USERNAME }} --docker-password=${{ env.DOCKER_PASSWORD }}
 
       - name: Deploy to openshift
         if: always()

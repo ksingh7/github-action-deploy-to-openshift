@@ -20,11 +20,21 @@ oc policy add-role-to-user edit -z $SA
 
 export OPENSHIFT_SERVER_URL=$(oc whoami --show-server)
 
+
+
 brew install gh
 gh auth login --hostname github.com
 gh secret -R github.com/ksingh7/github-action-deploy-to-openshift list
 
 gh secret -R github.com/ksingh7/github-action-deploy-to-openshift set OPENSHIFT_SERVER_URL -b"${OPENSHIFT_SERVER_URL}"
 gh secret -R github.com/ksingh7/github-action-deploy-to-openshift set OPENSHIFT_TOKEN -b"${OPENSHIFT_TOKEN}"
+
+export QUAY_PULL_SECRET=''
+export DOCKER_USERNAME=karansingh
+export DOCKER_PASSWORD=
+gh secret -R github.com/ksingh7/github-action-deploy-to-openshift set QUAY_PULL_SECRET -b"${QUAY_PULL_SECRET}"
+gh secret -R github.com/ksingh7/github-action-deploy-to-openshift set DOCKER_USERNAME -b"${DOCKER_USERNAME}"
+gh secret -R github.com/ksingh7/github-action-deploy-to-openshift set DOCKER_PASSWORD -b"${DOCKER_PASSWORD}"
 gh secret -R github.com/ksingh7/github-action-deploy-to-openshift list
+
 ```
