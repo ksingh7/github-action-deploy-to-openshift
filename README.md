@@ -28,4 +28,5 @@ gh secret -R github.com/ksingh7/github-action-deploy-to-openshift set OPENSHIFT_
 gh secret -R github.com/ksingh7/github-action-deploy-to-openshift set OPENSHIFT_TOKEN -b"${OPENSHIFT_TOKEN}"
 gh secret -R github.com/ksingh7/github-action-deploy-to-openshift list
 
+
 ```
