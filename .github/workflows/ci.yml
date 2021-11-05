@@ -30,9 +30,10 @@ jobs:
         run: docker push ${{ env.REGISTRY_URL }}/karansingh/gha-python-app:$(echo $GITHUB_SHA | head -c7)
 
       - name: Update deployment file
-        run:  |
-          TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|${{ env.REGISTRY_URL }}/karansingh/gha-python-app:'${TAG}'|' $GITHUB_WORKSPACE/deploy-to-openshift.yaml
-          sed -i 's|<REGISTRY_SECRET>|${{ env.QUAY_REGISTRY_SECRET }}' $GITHUB_WORKSPACE/deploy-to-openshift.yaml
+        run:  TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|${{ env.REGISTRY_URL }}/karansingh/gha-python-app:'${TAG}'|' $GITHUB_WORKSPACE/deploy-to-openshift.yaml
+
+      - name: Update deployment file with image registry secret
+        run: sed -i 's|<REGISTRY_SECRET>|${{ env.QUAY_REGISTRY_SECRET }}|' $GITHUB_WORKSPACE/deploy-to-openshift.yaml
 
       - name: Authenticate and set context
         uses: redhat-actions/oc-login@v1
