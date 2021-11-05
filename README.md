@@ -37,4 +37,5 @@ gh secret -R github.com/ksingh7/github-action-deploy-to-openshift set DOCKER_USE
 gh secret -R github.com/ksingh7/github-action-deploy-to-openshift set DOCKER_PASSWORD -b"${DOCKER_PASSWORD}"
 gh secret -R github.com/ksingh7/github-action-deploy-to-openshift list
 
+
 ```
