@@ -6,7 +6,9 @@ jobs:
     env:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      REGISTRY_URL: "quay.io"
+      OPENSHIFT_SERVER_URL: ${{ secrets.OPENSHIFT_SERVER }}
+      OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
+      REGISTRY_URL: "quay.io" # use "docker.io" for docker hub
     steps:
       - name: Checkout main
         uses: actions/checkout@v2
@@ -24,13 +26,13 @@ jobs:
         run: docker push quay.io/karansingh/gha-python-app:$(echo $GITHUB_SHA | head -c7)
 
       - name: Update deployment file
-        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|quay.io/karansingh/gha-python-app:'${TAG}'|' $GITHUB_WORKSPACE/deploy-to-openshift.yaml
+        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|{{ env.REGISTRY_URL }}/karansingh/gha-python-app:'${TAG}'|' $GITHUB_WORKSPACE/deploy-to-openshift.yaml
 
       - name: Authenticate and set context
         uses: redhat-actions/oc-login@v1
         with:
-          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
-          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+          openshift_server_url: ${{ env.OPENSHIFT_SERVER_URL }}
+          openshift_token: ${{ env.OPENSHIFT_TOKEN }}
 
       # - name: Replace Environment Variables
       #   uses: danielr1996/envsubst-action@1.0.0
@@ -41,8 +43,7 @@ jobs:
       #     output: deploy.yaml
 
       - name: Create image registry secret
-        run: |
-          oc create secret docker-registry image-registry-secret --docker-server=quay.io --docker-username=${{ secrets.DOCKER_USERNAME }} --docker-password=${{ secrets.DOCKER_PASSWORD }}
+        run: oc create secret docker-registry image-registry-secret --docker-server=quay.io --docker-username=${{ env.DOCKER_USERNAME }} --docker-password=${{ env.DOCKER_PASSWORD }}
 
       - name: Deploy to openshift
         run: oc apply -f deploy-to-openshift.yaml
