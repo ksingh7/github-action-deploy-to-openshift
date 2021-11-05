@@ -16,6 +16,10 @@ jobs:
       - name: Update SHA
         run: echo $GITHUB_SHA > $GITHUB_WORKSPACE/_meta
 
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
+
       - name: Build container image
         run: docker build -t ${{ env.REGISTRY_URL }}/karansingh/gha-python-app:$(echo $GITHUB_SHA | head -c7) .
 
