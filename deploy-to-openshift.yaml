@@ -36,3 +36,14 @@ spec:
               cpu: "500m"
           ports:
             - containerPort: 8080
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: gha-python-app
+spec:
+  port:
+    targetPort: 8080
+  to:
+    kind: Service
+    name: gha-python-app
