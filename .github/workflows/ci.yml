@@ -41,4 +41,5 @@ jobs:
         run: oc create secret docker-registry image-registry-secret --docker-server=quay.io --docker-username=${{ env.DOCKER_USERNAME }} --docker-password=${{ env.DOCKER_PASSWORD }}
 
       - name: Deploy to openshift
+        if: always()
         run: oc apply -f deploy-to-openshift.yaml
