@@ -24,6 +24,8 @@ spec:
       labels:
         app: gha-python-app
     spec:
+      imagePullSecrets:
+      - name: image-registry-secret    
       containers:
         - name: gha-python-app
           image: <IMAGE>
