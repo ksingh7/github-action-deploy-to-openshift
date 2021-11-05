@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main
-        uses: actions/checkout@main
+        uses: actions/checkout@v2
 
       - name: Update SHA
         run: echo $GITHUB_SHA > $GITHUB_WORKSPACE/_meta
@@ -26,10 +26,14 @@ jobs:
         run: docker push karansingh/gha-python-app
 
       - name: Update deployment file
-        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|karansingh/gha-python-app:'${TAG}'|' $GITHUB_WORKSPACE/deployment.yml
+        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|karansingh/gha-python-app:'${TAG}'|' $GITHUB_WORKSPACE/deploy-to-openshift.yaml
 
-#      - name: Deploy to Kubernetes
-#        run: kubectl apply -f deploy.yml
+      - name: Authenticate and set context
+        uses: redhat-actions/oc-login@v1
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
 
-#      - name: Verify deployment
-#        run: kubectl rollout status deployment/geerd-drive
+      - name: Deploy to openshift
+        run: oc apply -f deploy-to-openshift.yaml
+        
