@@ -6,7 +6,7 @@ jobs:
     env:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      OPENSHIFT_SERVER_URL: ${{ secrets.OPENSHIFT_SERVER }}
+      OPENSHIFT_SERVER_URL: ${{ secrets.OPENSHIFT_SERVER_URL }}
       OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
       REGISTRY_URL: "quay.io" # use "docker.io" for docker hub
     steps:
@@ -17,7 +17,7 @@ jobs:
         run: echo $GITHUB_SHA > $GITHUB_WORKSPACE/_meta
 
       - name: Build container image
-        run: docker build -t quay.io/karansingh/gha-python-app:$(echo $GITHUB_SHA | head -c7) .
+        run: docker build -t ${{ env.REGISTRY_URL }}/karansingh/gha-python-app:$(echo $GITHUB_SHA | head -c7) .
 
       - name: Docker Login
         run: docker login -u ${{ env.DOCKER_USERNAME }} -p ${{ env.DOCKER_PASSWORD }} ${{ env.REGISTRY_URL }}
