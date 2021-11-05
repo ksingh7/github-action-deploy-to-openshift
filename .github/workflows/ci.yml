@@ -29,7 +29,7 @@ jobs:
       - name: Push image to Docker Hub
         run: docker push ${{ env.REGISTRY_URL }}/karansingh/gha-python-app:$(echo $GITHUB_SHA | head -c7)
 
-      - name: Update deployment file
+      - name: Update deployment file with Image name
         run:  TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|${{ env.REGISTRY_URL }}/karansingh/gha-python-app:'${TAG}'|' $GITHUB_WORKSPACE/deploy-to-openshift.yaml
 
       - name: Update deployment file with image registry secret
@@ -41,8 +41,8 @@ jobs:
           openshift_server_url: ${{ env.OPENSHIFT_SERVER_URL }}
           openshift_token: ${{ env.OPENSHIFT_TOKEN }}
 
-      - name: Create image registry secret
-        run: oc create secret docker-registry image-registry-secret --docker-server=quay.io --docker-username=${{ env.DOCKER_USERNAME }} --docker-password=${{ env.DOCKER_PASSWORD }}
+#      - name: Create image registry secret
+#        run: oc create secret docker-registry image-registry-secret --docker-server=quay.io --docker-username=${{ env.DOCKER_USERNAME }} --docker-password=${{ env.DOCKER_PASSWORD }}
 
       - name: Deploy to openshift
         if: always()
