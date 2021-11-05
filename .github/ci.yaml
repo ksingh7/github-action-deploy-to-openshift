@@ -1,7 +1,4 @@
-on:
-  push:
-    branches:
-      - main
+on: push
 jobs:
   build:
     name: Build, push, and deploy
@@ -36,4 +33,3 @@ jobs:
 
       - name: Deploy to openshift
         run: oc apply -f deploy-to-openshift.yaml
-        
