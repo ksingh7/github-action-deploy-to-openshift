@@ -4,8 +4,8 @@ jobs:
     name: Build, push, and deploy
     runs-on: ubuntu-latest
     env:
-      #DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      #DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       QUAY_REGISTRY_SECRET: ${{ secrets.QUAY_REGISTRY_SECRET }}
       OPENSHIFT_SERVER_URL: ${{ secrets.OPENSHIFT_SERVER_URL }}
       OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
