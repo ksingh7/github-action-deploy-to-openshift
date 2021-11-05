@@ -11,19 +11,19 @@ jobs:
         run: echo $GITHUB_SHA > $GITHUB_WORKSPACE/_meta
 
       - name: Build container image
-        run: docker build -t karansingh/gha-python-app:$(echo $GITHUB_SHA | head -c7) .
+        run: docker build -t quay.io/karansingh/gha-python-app:$(echo $GITHUB_SHA | head -c7) .
 
       - name: Docker Login
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD quay.io
 
       - name: Push image to Docker Hub
-        run: docker push karansingh/gha-python-app:$(echo $GITHUB_SHA | head -c7)
+        run: docker push quay.io/karansingh/gha-python-app:$(echo $GITHUB_SHA | head -c7)
 
       - name: Update deployment file
-        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|karansingh/gha-python-app:'${TAG}'|' $GITHUB_WORKSPACE/deploy-to-openshift.yaml
+        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|quay.io/karansingh/gha-python-app:'${TAG}'|' $GITHUB_WORKSPACE/deploy-to-openshift.yaml
 
       - name: Authenticate and set context
         uses: redhat-actions/oc-login@v1
