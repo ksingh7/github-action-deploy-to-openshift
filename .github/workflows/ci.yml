@@ -34,14 +34,6 @@ jobs:
           openshift_server_url: ${{ env.OPENSHIFT_SERVER_URL }}
           openshift_token: ${{ env.OPENSHIFT_TOKEN }}
 
-      # - name: Replace Environment Variables
-      #   uses: danielr1996/envsubst-action@1.0.0
-      #   env:
-      #     PORT: ${{ secrets.PORT }}
-      #   with:
-      #     input: deploy-to-openshift.yaml
-      #     output: deploy.yaml
-
       - name: Create image registry secret
         run: oc create secret docker-registry image-registry-secret --docker-server=quay.io --docker-username=${{ env.DOCKER_USERNAME }} --docker-password=${{ env.DOCKER_PASSWORD }}
 
