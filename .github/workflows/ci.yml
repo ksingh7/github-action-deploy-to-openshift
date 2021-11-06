@@ -1,15 +1,17 @@
 on: push
+
+env:
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  QUAY_PULL_SECRET: ${{ secrets.QUAY_PULL_SECRET }}
+  OPENSHIFT_SERVER_URL: ${{ secrets.OPENSHIFT_SERVER_URL }}
+  OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
+  REGISTRY_URL: "quay.io" # use "docker.io" for docker hub
+
 jobs:
   build:
     name: Build, push, and deploy
     runs-on: ubuntu-latest
-    env:
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      QUAY_PULL_SECRET: ${{ secrets.QUAY_PULL_SECRET }}
-      OPENSHIFT_SERVER_URL: ${{ secrets.OPENSHIFT_SERVER_URL }}
-      OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
-      REGISTRY_URL: "quay.io" # use "docker.io" for docker hub
     steps:
       - name: Checkout main
         uses: actions/checkout@v2
