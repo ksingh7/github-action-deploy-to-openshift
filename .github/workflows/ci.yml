@@ -42,4 +42,4 @@ jobs:
           openshift_token: ${{ env.OPENSHIFT_TOKEN }}
 
       - name: Deploy to openshift
-        run: oc apply -f deploy-to-openshift.yaml
+        run: oc apply -f deploy-to-openshift.yaml -n karasing-dev
